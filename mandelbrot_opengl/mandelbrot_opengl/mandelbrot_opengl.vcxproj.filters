@@ -22,9 +22,11 @@
   <ItemGroup>
     <None Include="shaders\fragment_shader.glsl" />
     <None Include="shaders\vertex_shader.glsl" />
+    <None Include="shaders\v.glsl" />
+    <None Include="shaders\f.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="shaders\opengl-util.h">
+    <ClInclude Include="opengl-util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
