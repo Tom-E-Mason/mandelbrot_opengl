@@ -101,21 +101,15 @@ int main()
     glUniform2f(u_scale, scalex, scaley);
 
     int u_iterations = glGetUniformLocation(program, "u_iterations");
-    if (u_iterations == -1) {
-        return 0;
-    }
-    int iterations = 4096;
+    int iterations = 2048;
     glUniform1i(u_iterations, iterations);
 
     int u_screen = glGetUniformLocation(program, "u_screen");
     glUniform2f(u_screen, (float)screen_width, (float)screen_height);
 
     double mouse_x = 0, mouse_y = 0;
-    double prev_mouse_x = -1, prev_mouse_y = 0;
+    double prev_mouse_x = -1, prev_mouse_y;
 
-    bool i_down = false;
-    bool o_down = false;
-    
     while (!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT);
@@ -132,37 +126,47 @@ int main()
         glfwPollEvents();
 
         glfwGetCursorPos(window, &mouse_x, &mouse_y);
-        auto i_state = glfwGetKey(window, GLFW_KEY_I);
+        const auto world_mouse_x_before_zoom = mouse_x / scalex + offsetx;
+        const auto world_mouse_y_before_zoom = mouse_y / scaley + offsety;
+
+        const auto i_state = glfwGetKey(window, GLFW_KEY_I);
         if (i_state == GLFW_PRESS)
         {
-            i_down = true;
-        }
-        else if (i_down)
-        {
-            i_down = false;
-            scalex *= 1.5;
-            scaley *= 1.5;
+            scalex *= 1.1;
+            scaley *= 1.1;
             std::cout << "Zooming in, scale = " << scalex << ", " << scaley << '\n';
         }
 
-        glfwGetCursorPos(window, &mouse_x, &mouse_y);
-        auto o_state = glfwGetKey(window, GLFW_KEY_O);
+        const auto o_state = glfwGetKey(window, GLFW_KEY_O);
         if (o_state == GLFW_PRESS)
         {
-            o_down = true;
-        }
-        else if (o_down)
-        {
-            o_down = false;
-            scalex /= 1.5;
-            scaley /= 1.5;
+            scalex /= 1.1;
+            scaley /= 1.1;
             std::cout << "Zooming out, scale = " << scalex << ", " << scaley << '\n';
         }
 
-        /*if (prev_mouse_x != -1) {
-            offsetx += mouse_x - prev_mouse_x;
-            offsety += mouse_y - prev_mouse_y;
-        }*/
+        const auto world_mouse_x_after_zoom = mouse_x / scalex + offsetx;
+        const auto world_mouse_y_after_zoom = mouse_y / scaley + offsety;
+
+        offsetx -= world_mouse_x_after_zoom - world_mouse_x_before_zoom;
+        offsety -= world_mouse_y_after_zoom - world_mouse_y_before_zoom;
+
+        const auto mouse_state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1);
+        if (mouse_state == GLFW_PRESS)
+        {
+            if (prev_mouse_x != -1)
+            {
+                offsetx -= (mouse_x - prev_mouse_x) / scalex;
+                offsety -= (mouse_y - prev_mouse_y) / scaley;
+            }
+
+            prev_mouse_x = mouse_x;
+            prev_mouse_y = mouse_y;
+        }
+        else
+        {
+            prev_mouse_x = -1;
+        }
 
         prev_mouse_x = mouse_x;
         prev_mouse_y = mouse_y;

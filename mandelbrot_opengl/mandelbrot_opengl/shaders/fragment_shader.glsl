@@ -16,7 +16,7 @@ void main()
 {
     vec2 pixel_coords = vec2(gl_FragCoord.x, u_screen.y - gl_FragCoord.y);
 
-    vec2 lerp = (pixel_coords / u_scale);
+    vec2 lerp = (pixel_coords / u_scale) + u_offset;
 
     vec2 c = lerp;
     vec2 z = vec2(0.0f);
@@ -28,11 +28,6 @@ void main()
         ++n;
     }
 
-    float test = 0.0;
-    if (u_iterations != 0) {
-        test = 1.0;
-    }
-
     float f = 0.1 * float(n);
 
     float r = 0.5f * sin(f) + 0.5f;
@@ -40,5 +35,4 @@ void main()
     float b = 0.5f * sin(f + 4.188f) + 0.5f;
 
     color = vec4(r, g, b, 1.0f);
-    //color = vec4(test, 0, 0, 1.0f);
 };
