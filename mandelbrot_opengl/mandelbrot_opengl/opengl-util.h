@@ -35,11 +35,11 @@ public:
             glGetShaderiv(m_id, GL_INFO_LOG_LENGTH, &length);
 
             std::string message;
-            message.reserve(length);
+            message.resize(length);
 
             glGetShaderInfoLog(m_id, length, &length, message.data());
 
-            std::cout << message << '\n';
+            std::cout << message << '\n' << '\n' << '\n';
         }
     }
 
