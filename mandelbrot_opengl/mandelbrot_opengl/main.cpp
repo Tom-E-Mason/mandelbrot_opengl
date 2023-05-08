@@ -42,24 +42,15 @@ int main()
 
     float positions[] =
     {
-        -1.0f,  1.0f, 0.0f, // tl
-         1.0f,  1.0f, 0.0f, // tr
-        -1.0f, -1.0,  0.0f, // bl
-         1.0f, -1.0f, 0.0f  // br
-    };
-
-    float tex_coords[] =
-    {
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-        0.0f, 1.0f,
-        1.0f, 1.0f
+        -1.0f,  1.0f,
+         1.0f,  1.0f,
+        -1.0f, -1.0,
+         1.0f, -1.0f
     };
 
     enum
     {
         POSITION_VB,
-        TEXCOORD_VB,
         NUM_BUFFERS,
     };
 
@@ -70,19 +61,13 @@ int main()
     unsigned int buffers[NUM_BUFFERS];
     glGenBuffers(NUM_BUFFERS, buffers);
 
-    glGenBuffers(2, buffers);
+    glGenBuffers(NUM_BUFFERS, buffers);
 
     glBindBuffer(GL_ARRAY_BUFFER, buffers[POSITION_VB]);
-    glBufferData(GL_ARRAY_BUFFER, 4 * 3 * sizeof(float), positions, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, buffers[TEXCOORD_VB]);
-    glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), tex_coords, GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
     glBindVertexArray(0);
 
